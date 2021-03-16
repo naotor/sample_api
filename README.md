@@ -29,11 +29,14 @@ Sample API Environment
 
   $ docker-compose build
 
-  $ docker-compose django-admin startproject $API_NAME
+  $ docker-compose run api django-admin startproject $API_NAME
 
   $ sudo chown $USER:$USER -R src
+  
   $ mv src/$API_NAME/manage.py src/
-  $ mv src/$API_NAME/$API_NAME/* src/
+
+  $ mv src/$API_NAME/$API_NAME/* src/$API_NAME
+  
   $ rmdir src/$API_NAME/$API_NAME
 
   $ docker-compose up -d
