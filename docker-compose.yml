@@ -10,7 +10,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./${API_NAME}/static:/static
+      - ./src/static:/static
       - ./conf.d/nginx:/etc/nginx/conf.d
     depends_on:
       - api
@@ -18,10 +18,10 @@ services:
   api:
     build: .
     container_name: az01
-    command: uwsgi --socket :8000 --module ${API_NAME}.wsgi --ini /code/uwsgi.d/${ENV}.ini
+    command: uwsgi --socket :8000 --module ${API_NAME}.wsgi --ini /uwsgi/${ENV}.ini
     volumes:
-      - ./${API_NAME}:/code
-      - ./uwsgi.d:/code/uwsgi.d
+      - ./src:/code
+      - ./uwsgi.d:/uwsgi
     expose:
       - "8000"
     env_file:
@@ -38,4 +38,4 @@ services:
       - env.d/${ENV}.env
     volumes:
       - db:/var/lib/mysql
-      - ./sql.d/sql:/docker-entrypoint-initdb.d
+      - ./sql.d:/docker-entrypoint-initdb.d

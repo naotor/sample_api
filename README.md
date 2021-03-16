@@ -17,6 +17,7 @@ Sample API Environment
   ├── requirements.txt
   ├── sql.d
   │   └── init.sql
+  ├── src
   └── uwsgi.d
       └── dev.ini
 
@@ -24,9 +25,16 @@ Sample API Environment
   ENV=dev
   API_NAME=sample_api
 
+  $ source .env
+
   $ docker-compose build
 
-  $ docker-compose django-admin startproject sample_api
+  $ docker-compose django-admin startproject $API_NAME
+
+  $ sudo chown $USER:$USER -R src
+  $ mv src/$API_NAME/manage.py src/
+  $ mv src/$API_NAME/$API_NAME/* src/
+  $ rmdir src/$API_NAME/$API_NAME
 
   $ docker-compose up -d
 ```
