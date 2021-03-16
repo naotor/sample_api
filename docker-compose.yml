@@ -1,0 +1,41 @@
+version: "3.7"
+
+volumes:
+  db:
+
+services:
+  web:
+    image: nginx:1.16
+    container_name: wz01
+    ports:
+      - "80:80"
+    volumes:
+      - ./${API_NAME}/static:/static
+      - ./conf.d/nginx:/etc/nginx/conf.d
+    depends_on:
+      - api
+
+  api:
+    build: .
+    container_name: az01
+    command: uwsgi --socket :8000 --module ${API_NAME}.wsgi --ini /code/uwsgi.d/${ENV}.ini
+    volumes:
+      - ./${API_NAME}:/code
+      - ./uwsgi.d:/code/uwsgi.d
+    expose:
+      - "8000"
+    env_file:
+      - env.d/${ENV}.env
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.4
+    container_name: dz01
+    ports:
+      - "3306:3306"
+    env_file:
+      - env.d/${ENV}.env
+    volumes:
+      - db:/var/lib/mysql
+      - ./sql.d/sql:/docker-entrypoint-initdb.d
